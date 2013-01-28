@@ -7,6 +7,8 @@ module Lhm
         DataMapperConnection.new(adapter)
       elsif defined?(ActiveRecord)
         ActiveRecordConnection.new(adapter)
+      else
+        raise 'Nor DataMapper or ActiveRecord found.'
       end
     end
 
