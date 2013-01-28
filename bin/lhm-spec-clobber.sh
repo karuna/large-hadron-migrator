@@ -11,9 +11,9 @@ lhmkill() {
   sleep 2
 }
 
-echo stopping other running mysql instance
-launchctl remove com.mysql.mysqld || { echo launchctl did not remove mysqld; }
-"$mysqldir"/bin/mysqladmin shutdown || { echo mysqladmin did not shut down anything; }
+# echo stopping other running mysql instance
+# launchctl remove com.mysql.mysqld || { echo launchctl did not remove mysqld; }
+# "$mysqldir"/bin/mysqladmin shutdown || { echo mysqladmin did not shut down anything; }
 
 lhmkill
 

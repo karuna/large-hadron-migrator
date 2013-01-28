@@ -81,13 +81,13 @@ module Lhm
       end
 
       def extract_indices(indices)
-        indices
-          .map do |row|
+        indices.
+          map do |row|
             key_name = struct_key(row, "Key_name")
             column_name = struct_key(row, "COLUMN_NAME")
             [row[key_name], row[column_name]]
-          end
-          .inject(Hash.new { |h, k| h[k] = []}) do |memo, (idx, column)|
+          end.
+          inject(Hash.new { |h, k| h[k] = []}) do |memo, (idx, column)|
             memo[idx] << column
             memo
           end
