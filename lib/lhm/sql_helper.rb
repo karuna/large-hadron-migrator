@@ -72,11 +72,13 @@ module Lhm
     end
 
     def struct_key(struct, key)
-      if struct.public_methods.include? :keys
-        struct.keys.find {|k| k.to_s.downcase == key.to_s.downcase }
-      elsif struct.public_methods.include? :members
-        struct.members.find {|k| k.to_s.downcase == key.to_s.downcase }
-      end
+      keys = if struct.public_methods.include? :keys
+               struct.keys
+             else
+               struct.members
+             end
+
+      keys.find {|k| k.to_s.downcase == key.to_s.downcase }
     end
   end
 end
