@@ -20,28 +20,17 @@ module Lhm
       end.join(', ')
     end
 
-    def table?(table_name)
-      connection.table_exists?(table_name)
-    end
-
-    def sql(statements)
-      [statements].flatten.each do |statement|
-        connection.execute(tagged(statement))
-      end
-    rescue ActiveRecord::StatementInvalid => e
-      error e.message
-    end
-
-    def update(statements)
-      [statements].flatten.inject(0) do |memo, statement|
-        memo += connection.update(tagged(statement))
-      end
-    rescue ActiveRecord::StatementInvalid => e
-      error e.message
-    end
-
     def version_string
-      connection.select_one("show variables like 'version'")["Value"]
+      row = connection.select_one("show variables like 'version'")
+      value = struct_key(row, "Value")
+      row[value]
+    end
+
+    def error_classes
+      classes = []
+      classes << DataObjects::SQLError if defined?(DataMapper)
+      classes << ActiveRecord::StatementInvalid if defined?(ActiveRecord)
+      classes
     end
 
   private
@@ -80,6 +69,14 @@ module Lhm
         end
       end
       return true
+    end
+
+    def struct_key(struct, key)
+      if struct.public_methods.include? :keys
+        struct.keys.find {|k| k.to_s.downcase == key.to_s.downcase }
+      elsif struct.public_methods.include? :members
+        struct.members.find {|k| k.to_s.downcase == key.to_s.downcase }
+      end
     end
   end
 end
