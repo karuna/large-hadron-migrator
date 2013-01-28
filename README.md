@@ -71,7 +71,7 @@ ActiveRecord::Base.establish_connection(
 )
 
 # or with DataMapper
-DataMapper.setup(:default, 'mysql://127.0.0.1/lhm')
+Lhm.setup(DataMapper.setup(:default, 'mysql://127.0.0.1/lhm'))
 
 # and migrate
 Lhm.change_table :users do |m|

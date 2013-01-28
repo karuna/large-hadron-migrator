@@ -34,7 +34,7 @@ module Lhm
   # @return [Boolean] Returns true if the migration finishes
   # @raise [Error] Raises Lhm::Error in case of a error and aborts the migration
   def self.change_table(table_name, options = {}, &block)
-    connection = Connection.new(@@adapter)
+    connection = Connection.new(adapter)
 
     origin = Table.parse(table_name, connection)
     invoker = Invoker.new(origin, connection)
@@ -46,5 +46,16 @@ module Lhm
 
   def self.setup(adapter)
     @@adapter = adapter
+  end
+
+  def self.adapter
+    has_adapter = !!@@adapter
+    if !has_adapter && defined?(ActiveRecord)
+      @@adapter = ActiveRecord::Base.connection
+    elsif !has_adapter
+      raise 'Please call Lhm.setup before Lhm.change_table'
+    end
+
+    @@adapter
   end
 end
