@@ -72,7 +72,7 @@ module Lhm
     end
 
     def struct_key(struct, key)
-      keys = if struct.public_methods.include? :keys
+      keys = if struct.is_a? Hash
                struct.keys
              else
                struct.members
